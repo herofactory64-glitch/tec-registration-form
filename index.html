@@ -635,6 +635,7 @@ form.addEventListener('submit', async e=>{
   try{
     await fetch(TEC_ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)});
     form.style.display='none';
+    var introBox=document.querySelector('.intro'); if(introBox) introBox.style.display='none'; // hide the welcome box after submit
     document.getElementById('thanks').classList.add('show');
     window.scrollTo({top:0,behavior:'smooth'});
   }catch(err){
