@@ -358,7 +358,7 @@ function childMarkup(n){
         <div class="cond" id="child${n}_subj_other"><label class="sr-only" for="child${n}_subj_other_in">Other subject</label><input type="text" id="child${n}_subj_other_in" name="child${n}_subjects_other" placeholder="Please specify the other subject"></div>
         <div class="err">Please select at least one.</div></div>
       <div class="field full"><label class="lbl" for="child${n}_allergies">Allergies / medical needs<span class="req">*</span></label><input type="text" id="child${n}_allergies" name="child${n}_allergies" data-req placeholder="Type 'None' if not applicable"><div class="err">Required — type 'None' if not applicable.</div></div>
-      <div class="field full"><label class="lbl" for="child${n}_days">Preferred days / sessions</label><input type="text" id="child${n}_days" name="child${n}_days" placeholder="Optional — e.g. Saturdays, or Tue & Thu after school"></div>
+      <div class="field full"><label class="lbl" id="lbl_child${n}_days">Preferred days / sessions<span class="req">*</span></label><div class="checks" role="group" aria-labelledby="lbl_child${n}_days" data-checkgroup="child${n}_days"><label class="choice"><input type="checkbox" name="child${n}_days" value="Wednesday"><span>Wednesday</span></label><label class="choice"><input type="checkbox" name="child${n}_days" value="Thursday"><span>Thursday</span></label><label class="choice"><input type="checkbox" name="child${n}_days" value="Friday"><span>Friday</span></label></div><div class="err">Please select at least one day.</div></div>
     </div></div>`;
 }
 function bindChild(card, n){
@@ -389,7 +389,7 @@ childrenWrap.addEventListener('click', e=>{
     c.querySelectorAll('[for^="child"]').forEach(el=>{el.setAttribute('for',el.getAttribute('for').replace(/child\d+_/,'child'+childCount+'_'));});
     c.querySelectorAll('[id^="lbl_child"]').forEach(el=>{el.id=el.id.replace(/lbl_child\d+_/,'lbl_child'+childCount+'_');});
     c.querySelectorAll('[aria-labelledby^="lbl_child"]').forEach(el=>{el.setAttribute('aria-labelledby',el.getAttribute('aria-labelledby').replace(/lbl_child\d+_/,'lbl_child'+childCount+'_'));});
-    const cg=c.querySelector('[data-checkgroup]'); if(cg) cg.setAttribute('data-checkgroup','child'+childCount+'_subjects');
+    c.querySelectorAll('[data-checkgroup]').forEach(el=>{el.setAttribute('data-checkgroup',el.getAttribute('data-checkgroup').replace(/child\d+_/,'child'+childCount+'_'));});
     const ot=c.querySelector('[data-otherfor]'); if(ot) ot.setAttribute('data-otherfor','child'+childCount+'_subj_other');
     // clear any stale error state after renumber
     c.querySelectorAll('.invalid').forEach(el=>el.classList.remove('invalid'));
@@ -482,9 +482,8 @@ function validate(){
       else bad=!el.value.trim();
       showErr(el,bad); if(bad){count++; if(!firstBad)firstBad=el;}
     });
-    const cg=card.querySelector('[data-checkgroup]');
-    if(cg){ const any=cg.querySelector('input:checked'); const f=cg.closest('.field'); const err=f.querySelector('.err');
-      if(!any){err.classList.add('show'); count++; if(!firstBad)firstBad=cg;} else err.classList.remove('show'); }
+    card.querySelectorAll('[data-checkgroup]').forEach(cg=>{ const any=cg.querySelector('input:checked'); const f=cg.closest('.field'); const err=f.querySelector('.err');
+      if(!any){err.classList.add('show'); count++; if(!firstBad)firstBad=cg;} else err.classList.remove('show'); });
   });
   if(firstBad){
     a11yStatus.textContent = count+' field'+(count>1?'s':'')+' need attention. Please complete the highlighted fields.';
