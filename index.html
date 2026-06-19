@@ -77,6 +77,7 @@
   .choice input:focus-visible+span{box-shadow:0 0 0 3px rgba(27,58,99,.22)}
   .checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   @media(max-width:620px){.checks{grid-template-columns:1fr}}
+  .checks-1col{grid-template-columns:1fr}
   .selectall{font:inherit;font-size:12px;font-weight:700;color:var(--navy-700);background:var(--navy-50);border:1px solid #cdd9e8;border-radius:6px;padding:3px 10px;margin-left:6px;cursor:pointer;vertical-align:middle}
   .selectall:hover{background:#e1ebf7}
 
@@ -448,7 +449,7 @@ function childMarkup(n){
         <div class="cond" id="child${n}_subj_other"><label class="sr-only" for="child${n}_subj_other_in">Other subject</label><input type="text" id="child${n}_subj_other_in" name="child${n}_subjects_other" placeholder="Please specify the other subject"></div>
         <div class="err">Please select at least one.</div></div>
       <div class="field full"><label class="lbl" for="child${n}_allergies">Allergies / medical needs<span class="req">*</span></label><input type="text" id="child${n}_allergies" name="child${n}_allergies" data-req placeholder="Type 'None' if not applicable"><div class="err">Required — type 'None' if not applicable.</div></div>
-      <div class="field full"><label class="lbl" id="lbl_child${n}_days">Preferred days / sessions<span class="req">*</span> <button type="button" class="selectall" data-selectall>Select all</button></label><div class="checks" role="group" aria-labelledby="lbl_child${n}_days" data-checkgroup="child${n}_days"><label class="choice"><input type="checkbox" name="child${n}_days" value="Wednesday"><span>Wednesday</span></label><label class="choice"><input type="checkbox" name="child${n}_days" value="Thursday"><span>Thursday</span></label><label class="choice"><input type="checkbox" name="child${n}_days" value="Friday"><span>Friday</span></label></div><div class="err">Please select at least one day.</div></div>
+      <div class="field full"><label class="lbl" id="lbl_child${n}_days">Preferred days / sessions<span class="req">*</span> <button type="button" class="selectall" data-selectall>Select all</button></label><div class="checks checks-1col" role="group" aria-labelledby="lbl_child${n}_days" data-checkgroup="child${n}_days"><label class="choice"><input type="checkbox" name="child${n}_days" value="Wednesday"><span>Wednesday</span></label><label class="choice"><input type="checkbox" name="child${n}_days" value="Thursday"><span>Thursday</span></label><label class="choice"><input type="checkbox" name="child${n}_days" value="Friday"><span>Friday</span></label></div><div class="err">Please select at least one day.</div></div>
     </div></div>`;
 }
 function bindChild(card, n){
