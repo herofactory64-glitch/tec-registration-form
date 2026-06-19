@@ -77,6 +77,8 @@
   .choice input:focus-visible+span{box-shadow:0 0 0 3px rgba(27,58,99,.22)}
   .checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   @media(max-width:620px){.checks{grid-template-columns:1fr}}
+  .selectall{font:inherit;font-size:12px;font-weight:700;color:var(--navy-700);background:var(--navy-50);border:1px solid #cdd9e8;border-radius:6px;padding:3px 10px;margin-left:6px;cursor:pointer;vertical-align:middle}
+  .selectall:hover{background:#e1ebf7}
 
   /* child card */
   .child{border:1.5px solid #dde4ee;border-radius:12px;padding:18px;margin-bottom:16px;background:#fbfcfe;position:relative}
@@ -285,8 +287,8 @@
         <div class="err" data-for="photo_consent">Please make a selection.</div>
       </div>
       <div class="field">
-        <label class="lbl" for="hear">How did you hear about us?<span class="req">*</span></label>
-        <input type="text" id="hear" name="heard_about" required placeholder="e.g. friend / family, Facebook, school, walked past…">
+        <label class="lbl" for="hear">How did you hear about us?</label>
+        <input type="text" id="hear" name="heard_about" placeholder="e.g. friend / family, Facebook, school, walked past…">
         <div class="err" data-for="hear">Required.</div>
       </div>
       <div class="field">
@@ -436,7 +438,6 @@ function childMarkup(n){
       ${n>1?`<button type="button" class="btn-remove" data-remove="${n}">Remove</button>`:''}</div>
     <div class="grid">
       <div class="field"><label class="lbl" for="child${n}_name">Child's full name<span class="req">*</span></label><input type="text" id="child${n}_name" name="child${n}_name" data-req placeholder="First & last name"><div class="err">Required.</div></div>
-      <div class="field"><label class="lbl" for="child${n}_preferred">Preferred name</label><input type="text" id="child${n}_preferred" name="child${n}_preferred" placeholder="Optional"></div>
       <div class="field"><label class="lbl" for="child${n}_dob">Date of birth<span class="req">*</span></label><input type="date" id="child${n}_dob" name="child${n}_dob" data-req><div class="err">Required.</div></div>
       <div class="field"><label class="lbl" id="lbl_child${n}_gender">Gender<span class="req">*</span></label>
         <div class="choices" role="radiogroup" aria-labelledby="lbl_child${n}_gender" aria-required="true"><label class="choice"><input type="radio" name="child${n}_gender" value="Male" data-req><span>Male</span></label>
@@ -447,7 +448,7 @@ function childMarkup(n){
         <div class="cond" id="child${n}_subj_other"><label class="sr-only" for="child${n}_subj_other_in">Other subject</label><input type="text" id="child${n}_subj_other_in" name="child${n}_subjects_other" placeholder="Please specify the other subject"></div>
         <div class="err">Please select at least one.</div></div>
       <div class="field full"><label class="lbl" for="child${n}_allergies">Allergies / medical needs<span class="req">*</span></label><input type="text" id="child${n}_allergies" name="child${n}_allergies" data-req placeholder="Type 'None' if not applicable"><div class="err">Required — type 'None' if not applicable.</div></div>
-      <div class="field full"><label class="lbl" id="lbl_child${n}_days">Preferred days / sessions<span class="req">*</span></label><div class="checks" role="group" aria-labelledby="lbl_child${n}_days" data-checkgroup="child${n}_days"><label class="choice"><input type="checkbox" name="child${n}_days" value="Wednesday"><span>Wednesday</span></label><label class="choice"><input type="checkbox" name="child${n}_days" value="Thursday"><span>Thursday</span></label><label class="choice"><input type="checkbox" name="child${n}_days" value="Friday"><span>Friday</span></label></div><div class="err">Please select at least one day.</div></div>
+      <div class="field full"><label class="lbl" id="lbl_child${n}_days">Preferred days / sessions<span class="req">*</span> <button type="button" class="selectall" data-selectall>Select all</button></label><div class="checks" role="group" aria-labelledby="lbl_child${n}_days" data-checkgroup="child${n}_days"><label class="choice"><input type="checkbox" name="child${n}_days" value="Wednesday"><span>Wednesday</span></label><label class="choice"><input type="checkbox" name="child${n}_days" value="Thursday"><span>Thursday</span></label><label class="choice"><input type="checkbox" name="child${n}_days" value="Friday"><span>Friday</span></label></div><div class="err">Please select at least one day.</div></div>
     </div></div>`;
 }
 function bindChild(card, n){
@@ -486,6 +487,16 @@ childrenWrap.addEventListener('click', e=>{
     bindChild(c, childCount);
   });
   addBtn.disabled=false; addBtn.textContent='＋ Add another child';
+});
+/* "Select all" for a child's checkbox group (e.g. preferred days) */
+childrenWrap.addEventListener('click', e=>{
+  const sa=e.target.closest('[data-selectall]'); if(!sa) return;
+  const field=sa.closest('.field'); if(!field) return;
+  const boxes=[...field.querySelectorAll('input[type=checkbox]')];
+  const allOn=boxes.length>0 && boxes.every(b=>b.checked);
+  boxes.forEach(b=>{ b.checked=!allOn; });           // toggle: select all, or clear if already all selected
+  const cg=field.querySelector('[data-checkgroup]'), err=field.querySelector('.err');
+  if(cg && cg.querySelector('input:checked') && err) err.classList.remove('show');
 });
 addChild(); // start with one
 
